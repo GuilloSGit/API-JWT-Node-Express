@@ -4,7 +4,7 @@ export const requireToken = (req, res, next) => {
     try {
         let token = req.headers?.authorization;
         if (!token) {
-            throw new Error("No Bearer token provided");
+            throw new Error("No Bearer");
         }
 
         token = token.split(" ")[1];
@@ -33,7 +33,7 @@ export const requireToken = (req, res, next) => {
                 message: "The token has expired"
             }
         };
-        return res.status(TokenVerificationError[error.message].status)
+        return res.status( TokenVerificationError[error.message].status )
             .json({ error: TokenVerificationError[error.message].message });
     }
 
