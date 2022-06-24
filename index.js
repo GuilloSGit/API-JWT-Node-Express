@@ -10,6 +10,5 @@ app.use('/api/v1/auth', routerAuth); // uses the auth routes
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} 🚀🐥\n`,
-        `Visit http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT} 🚀🐥\nVisit => http://localhost:${PORT}`);
 });

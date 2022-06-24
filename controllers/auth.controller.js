@@ -1,5 +1,6 @@
-import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
+import { User } from "../models/User.js";
+import { generateToken } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {
     const { email, password } = req.body;
@@ -22,7 +23,6 @@ export const register = async (req, res) => {
         return res.status(201).json({ "ok": "successfully registered" });
         
     } catch (error) {
-        console.log(error);
         /* Default mongoose alternative */
         if (error.code === 11000) {
             return res.status(400).json({ "error": "Email already exists" });
@@ -47,12 +47,20 @@ export const login = async (req, res) => {
         }
 
         // JWT Generation with user id and 15 minutes expiration
-        const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "15m" });
-
-        return res.json({token});
+        const { token, expiresIn} = generateToken(user.id);
+        return res.json({ token, expiresIn });
         
     } catch (error) {
         console.log(error);
         return res.status(500).json({ "error": "Something went wrong trying to login" });
     }
 };
+
+export const infoUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.uid).lean();
+        return res.json({ email: user.email, id: user.id });
+    } catch (error) {
+        return res.status(500).json({ "error": "Something went wrong trying to get user info" });
+    }
+}
